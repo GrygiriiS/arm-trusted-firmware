@@ -47,6 +47,11 @@ struct entry_point_info *bl31_plat_get_next_image_ep_info(uint32_t type)
 	next_image_info = (type == NON_SECURE) ?
 		&from_bl2->bl33_ep_info : &from_bl2->bl32_ep_info;
 
+	/* HACK: Boot U-Boot in EL2. This should be configured from IPL side */
+	if (type == NON_SECURE)
+	    next_image_info->spsr = SPSR_64(MODE_EL2, MODE_SP_ELX,
+					    DISABLE_ALL_EXCEPTIONS);
+
 	return (next_image_info->pc != 0U) ? next_image_info : NULL;
 }
 
