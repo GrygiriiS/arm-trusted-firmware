@@ -124,6 +124,25 @@ ifeq (${ARCH},aarch32)
   $(error Error: AArch32 not supported on rpi5)
 endif
 
+ifeq (${SPD},opteed)
+
+# Very end of first 2GB
+BL32_BASE		?= 0x1D000000
+BL32_MEM_SIZE		?= 0x02000000
+BL32_MEM_BASE		= BL32_BASE
+
+# We expect that OP-TEE image will be placed right after TF-A
+RPI_OPTEE_IMAGE_BASE	?= 0x80000
+# 1MB should be enough
+RPI_OPTEE_IMAGE_SIZE	?= 0x100000
+
+$(eval $(call add_define,BL32_MEM_BASE))
+$(eval $(call add_define,BL32_MEM_SIZE))
+$(eval $(call add_define,BL32_BASE))
+$(eval $(call add_define,RPI_OPTEE_IMAGE_BASE))
+$(eval $(call add_define,RPI_OPTEE_IMAGE_SIZE))
+endif
+
 ifneq ($(ENABLE_STACK_PROTECTOR), 0)
 PLAT_BL_COMMON_SOURCES	+=	drivers/rpi3/rng/rpi3_rng.c		\
 				plat/rpi/common/rpi3_stack_protector.c

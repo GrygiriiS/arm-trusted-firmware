@@ -65,6 +65,23 @@ options may be necessary.
 By default, all boot stages print messages to the dedicated UART debug port.
 Configuration is ``115200 8n1``.
 
+OP-TEE
+------
+
+It is possible to use OP-TEE. But there is a caveat: OP-TEE image should be
+load together with TF-A image, but RPI loader can load one file only. Solution
+is to pack TF-A and OP-TEE into one image.
+
+Build TF-A with ``SPD=opteed`` option and then attach OP-TEE image to TF-A:
+
+.. code:: shell
+
+    cp build/rpi5/debug/bl31.bin bl31_bl32.bin
+    dd if=tee-raw.bin of=bl31_bl32.bin bs=1024 seek=512
+
+Then copy resulting ``bl31_bl32.bin`` to boot media as described in
+the previous section.
+
 Design
 ------------------
 

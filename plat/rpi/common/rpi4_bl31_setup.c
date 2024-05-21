@@ -132,6 +132,15 @@ void bl31_early_platform_setup2(u_register_t arg0, u_register_t arg1,
 	/* Initialize the console to provide early debug support. */
 	rpi3_console_init();
 
+#ifdef SPD_opteed
+	VERBOSE("rpi: Moving OP-TEE Image to %x\n", BL32_BASE);
+	memcpy((void*)BL32_BASE, (void*)RPI_OPTEE_IMAGE_BASE,
+	       RPI_OPTEE_IMAGE_SIZE);
+	bl32_image_ep_info.pc = BL32_BASE;
+	bl32_image_ep_info.spsr = rpi3_get_spsr_for_bl33_entry();
+	bl32_image_ep_info.args.arg3 = rpi4_get_dtb_address();
+	SET_SECURITY_STATE(bl33_image_ep_info.h.attr, SECURE);
+#endif
 	bl33_image_ep_info.pc = plat_get_ns_image_entrypoint();
 	bl33_image_ep_info.spsr = rpi3_get_spsr_for_bl33_entry();
 	SET_SECURITY_STATE(bl33_image_ep_info.h.attr, NON_SECURE);

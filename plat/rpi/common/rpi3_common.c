@@ -48,6 +48,12 @@
 				RPI3_OPTEE_PAGEABLE_LOAD_BASE,	\
 				RPI3_OPTEE_PAGEABLE_LOAD_SIZE,	\
 				MT_MEMORY | MT_RW | MT_SECURE)
+# ifdef RPI_OPTEE_IMAGE_BASE
+# define MAP_OPTEE_IMAGE_PAGEABLE	MAP_REGION_FLAT(		\
+					RPI_OPTEE_IMAGE_BASE,		\
+					RPI_OPTEE_IMAGE_SIZE,		\
+					MT_MEMORY | MT_RW | MT_SECURE)
+# endif
 #endif
 
 #ifdef SCMI_SERVER_SUPPORT
@@ -103,6 +109,9 @@ static const mmap_region_t plat_rpi3_mmap[] = {
 #endif
 #ifdef SCMI_SERVER_SUPPORT
 	MAP_SCMI_MEM,
+#endif
+#ifdef RPI_OPTEE_IMAGE_BASE
+	MAP_OPTEE_IMAGE_PAGEABLE,
 #endif
 	{0}
 };
