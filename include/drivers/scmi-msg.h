@@ -87,6 +87,29 @@ uint32_t plat_scmi_agent_count(void);
 const char *plat_scmi_agent_get_name(unsigned int agent_id);
 
 /*
+ * Return how many SCMI devices are supported by the platform.
+ */
+uint32_t plat_scmi_device_count(void);
+
+/*
+ * Set an agent permissions to access device
+ * @agent_id: SCMI agent ID
+ * @device_id: SCMI device ID
+ * @allow: true to grant permissions
+ * Return a compliant SCMI error code
+ */
+int32_t plat_scmi_device_permission(uint32_t agent_id, uint32_t device_id,
+				    bool allow);
+
+/*
+ * Reset platform resource settings that were previously configured by an agent.
+ * @agent_id: SCMI agent ID
+ * @reset_perm: reset all access permission settings of the agent
+ * Return a compliant SCMI error code
+ */
+int32_t plat_scmi_reset_agent_cfg(uint32_t agent_id, bool reset_perm);
+
+/*
  * Get the count and list of SCMI protocols (but base) supported for an agent
  *
  * @agent_id: SCMI agent ID
