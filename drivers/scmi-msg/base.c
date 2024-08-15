@@ -166,6 +166,46 @@ static void discover_list_protocols(struct scmi_msg *msg)
 	msg->out_size_out = sizeof(p2a) + round_up(count, sizeof(uint32_t));
 }
 
+static void discover_agent(struct scmi_msg *msg)
+{
+	const struct scmi_base_discover_agent_a2p *a2p = NULL;
+	uint32_t agent_id;
+	const char *name;
+
+	struct scmi_base_discover_agent_p2a return_values = {
+		.status = SCMI_SUCCESS,
+	};
+
+	if (msg->in_size != sizeof(*a2p)) {
+		scmi_status_response(msg, SCMI_PROTOCOL_ERROR);
+		return;
+	}
+
+	a2p = (void *)msg->in;
+
+	if (a2p->agent_id != SCMI_BASE_AGENT_ID_OWN &&
+	    a2p->agent_id >= plat_scmi_agent_count()) {
+		scmi_status_response(msg, SCMI_INVALID_PARAMETERS);
+		return;
+	}
+
+	if (a2p->agent_id != SCMI_BASE_AGENT_ID_OWN) {
+		agent_id = a2p->agent_id;
+	} else {
+		agent_id = msg->agent_id;
+	}
+
+	return_values.name[0] = '\0';
+	return_values.agent_id = agent_id;
+
+	name = plat_scmi_agent_get_name(agent_id);
+	if (name) {
+		COPY_NAME_IDENTIFIER(return_values.name, name);
+	}
+
+	scmi_write_response(msg, &return_values, sizeof(return_values));
+}
+
 static const scmi_msg_handler_t scmi_base_handler_table[] = {
 	[SCMI_PROTOCOL_VERSION] = report_version,
 	[SCMI_PROTOCOL_ATTRIBUTES] = report_attributes,
@@ -175,6 +215,7 @@ static const scmi_msg_handler_t scmi_base_handler_table[] = {
 	[SCMI_BASE_DISCOVER_IMPLEMENTATION_VERSION] =
 					discover_implementation_version,
 	[SCMI_BASE_DISCOVER_LIST_PROTOCOLS] = discover_list_protocols,
+	[SCMI_BASE_DISCOVER_AGENT] = discover_agent,
 };
 
 static bool message_id_is_supported(unsigned int message_id)
