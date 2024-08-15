@@ -72,4 +72,20 @@ struct scmi_base_discover_list_protocols_p2a {
 	uint32_t protocols[];
 };
 
+/*
+ * BASE_DISCOVER_AGENT
+ */
+#define SCMI_BASE_AGENT_ID_OWN 0xFFFFFFFF
+
+struct scmi_base_discover_agent_a2p {
+	uint32_t agent_id;
+};
+
+struct scmi_base_discover_agent_p2a {
+	int32_t status;
+	uint32_t agent_id;
+	char name[SCMI_DEFAULT_STRING_LENGTH];
+};
+
+
 #endif /* SCMI_MSG_BASE_H */
