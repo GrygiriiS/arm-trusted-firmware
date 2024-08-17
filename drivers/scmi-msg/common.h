@@ -15,6 +15,7 @@
 #include "clock.h"
 #include "power_domain.h"
 #include "reset_domain.h"
+#include "scmi_pinctrl.h"
 #include "sensor.h"
 
 #define SCMI_VERSION			0x20000U
@@ -125,6 +126,13 @@ scmi_msg_handler_t scmi_msg_get_pd_handler(struct scmi_msg *msg);
  * Return a function handler for the message or NULL
  */
 scmi_msg_handler_t scmi_msg_get_sensor_handler(struct scmi_msg *msg);
+
+/*
+ * scmi_msg_get_pinctrl_handler - Return a handler for a pinctrl message
+ * @msg - message to process
+ * Return a function handler for the message or NULL
+ */
+scmi_msg_handler_t scmi_msg_get_pinctrl_handler(struct scmi_msg *msg);
 
 /*
  * Process Read, process and write response for input SCMI message
