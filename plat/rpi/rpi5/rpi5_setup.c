@@ -16,7 +16,7 @@ void plat_rpi_bl31_custom_setup(void)
 	/* Enable arch timer */
 	generic_delay_timer_init();
 
-#ifdef SCMI_SERVER_SUPPORT
+#if SCMI_SERVER_SUPPORT
 	rpi5_init_scmi_server();
 #endif
 }
