@@ -43,6 +43,7 @@ const char *plat_scmi_sub_vendor_name(void)
 
 static const uint8_t plat_protocol_list[] = {
 	SCMI_PROTOCOL_ID_RESET_DOMAIN,
+	SCMI_PROTOCOL_ID_PINCTRL,
 	0U /* Null termination */
 };
 
