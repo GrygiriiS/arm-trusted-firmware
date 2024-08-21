@@ -88,12 +88,12 @@ RPI3_RUNTIME_UART		:= 0
 RPI3_USE_UEFI_MAP		:= 0
 
 # Enable SCMI server support for RPI5
-SCMI_SERVER_SUPPORT		:= 1
+SCMI_SERVER_SUPPORT		?= 1
 
 # Process platform flags
 # ----------------------
 
-ifdef SCMI_SERVER_SUPPORT
+ifeq ($(SCMI_SERVER_SUPPORT), 1)
 #SCMI Server sources
 BL31_SOURCES		+= drivers/scmi-msg/base.c			\
 				drivers/scmi-msg/entry.c		\
