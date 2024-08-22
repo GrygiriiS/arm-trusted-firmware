@@ -7,6 +7,8 @@
 #ifndef RPI5_SCMI_RESOURCES_H
 #define RPI5_SCMI_RESOURCES_H
 
+#include "rpi5_scmi_devices.h"
+
 struct scmi_reset {
 	const char *name;
 	uint32_t id;

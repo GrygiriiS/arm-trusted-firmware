@@ -10,6 +10,7 @@
 #include <drivers/scmi.h>
 
 #include <platform_def.h>
+#include "rpi5_scmi_resources.h"
 
 #define RPI_SHM_N_BASE(n)	(RPI_SCMI_SHMEM_BASE + n * PAGE_SIZE)
 
@@ -97,6 +98,11 @@ size_t plat_scmi_protocol_count(void)
 uint32_t plat_scmi_agent_count(void)
 {
 	return SCMI_NUM_AGENTS;
+}
+
+uint32_t plat_scmi_device_count(void)
+{
+	return RPI5_SCMI_DEV_COUNT;
 }
 
 const uint8_t *plat_scmi_protocol_list(unsigned int agent_id __unused)
