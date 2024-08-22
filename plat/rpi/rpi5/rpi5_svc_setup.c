@@ -33,6 +33,27 @@ static uintptr_t rpi5_svc_smc_handler(uint32_t smc_fid, u_register_t x1,
 	case RPI5_SIP_SMC_SCMI:
 		scmi_smt_fastcall_smc_entry(0);
 		break;
+	case RPI5_SIP_SMC_SCMI + 1:
+		scmi_smt_fastcall_smc_entry(1);
+		break;
+	case RPI5_SIP_SMC_SCMI + 2:
+		scmi_smt_fastcall_smc_entry(2);
+		break;
+	case RPI5_SIP_SMC_SCMI + 3:
+		scmi_smt_fastcall_smc_entry(3);
+		break;
+	case RPI5_SIP_SMC_SCMI + 4:
+		scmi_smt_fastcall_smc_entry(4);
+		break;
+	case RPI5_SIP_SMC_SCMI + 5:
+		scmi_smt_fastcall_smc_entry(5);
+		break;
+	case RPI5_SIP_SMC_SCMI + 6:
+		scmi_smt_fastcall_smc_entry(6);
+		break;
+	case RPI5_SIP_SMC_SCMI + 7:
+		scmi_smt_fastcall_smc_entry(7);
+		break;
 
 	default:
 		WARN("Unknown RPI5 Service Call: 0x%x\n", smc_fid);

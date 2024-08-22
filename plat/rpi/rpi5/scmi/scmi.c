@@ -11,13 +11,48 @@
 
 #include <platform_def.h>
 
-#define RPI_SHM_BASE		RPI_SCMI_SHMEM_BASE
-#define RPI_SHM0_BASE	RPI_SHM_BASE
+#define RPI_SHM_N_BASE(n)	(RPI_SCMI_SHMEM_BASE + n * PAGE_SIZE)
 
-static struct scmi_msg_channel scmi_channel[] = {
+static struct scmi_msg_channel scmi_channel[SCMI_NUM_AGENTS] = {
 	[0] = {
-		.shm_addr = RPI_SHM0_BASE,
+		.shm_addr = RPI_SHM_N_BASE(0),
 		.shm_size = SMT_BUF_SLOT_SIZE,
+		.agent_name = "agent-0",
+	},
+	[1] = {
+		.shm_addr = RPI_SHM_N_BASE(1),
+		.shm_size = SMT_BUF_SLOT_SIZE,
+		.agent_name = "agent-1",
+	},
+	[2] = {
+		.shm_addr = RPI_SHM_N_BASE(2),
+		.shm_size = SMT_BUF_SLOT_SIZE,
+		.agent_name = "agent-2",
+	},
+	[3] = {
+		.shm_addr = RPI_SHM_N_BASE(3),
+		.shm_size = SMT_BUF_SLOT_SIZE,
+		.agent_name = "agent-3",
+	},
+	[4] = {
+		.shm_addr = RPI_SHM_N_BASE(4),
+		.shm_size = SMT_BUF_SLOT_SIZE,
+		.agent_name = "agent-4",
+	},
+	[5] = {
+		.shm_addr = RPI_SHM_N_BASE(5),
+		.shm_size = SMT_BUF_SLOT_SIZE,
+		.agent_name = "agent-5",
+	},
+	[6] = {
+		.shm_addr = RPI_SHM_N_BASE(6),
+		.shm_size = SMT_BUF_SLOT_SIZE,
+		.agent_name = "agent-6",
+	},
+	[7] = {
+		.shm_addr = RPI_SHM_N_BASE(7),
+		.shm_size = SMT_BUF_SLOT_SIZE,
+		.agent_name = "agent-7",
 	},
 };
 
@@ -26,6 +61,13 @@ struct scmi_msg_channel *plat_scmi_get_channel(unsigned int agent_id)
 	assert(agent_id < ARRAY_SIZE(scmi_channel));
 
 	return &scmi_channel[agent_id];
+}
+
+const char *plat_scmi_agent_get_name(unsigned int agent_id)
+{
+	assert(agent_id < ARRAY_SIZE(scmi_channel));
+
+	return scmi_channel[agent_id].agent_name;
 }
 
 static const char vendor[] = "EPAM";
@@ -50,6 +92,11 @@ static const uint8_t plat_protocol_list[] = {
 size_t plat_scmi_protocol_count(void)
 {
 	return ARRAY_SIZE(plat_protocol_list) - 1U;
+}
+
+uint32_t plat_scmi_agent_count(void)
+{
+	return SCMI_NUM_AGENTS;
 }
 
 const uint8_t *plat_scmi_protocol_list(unsigned int agent_id __unused)
