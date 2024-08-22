@@ -105,6 +105,8 @@ BL31_SOURCES		+= drivers/scmi-msg/base.c			\
 
 BL31_SOURCES		+= drivers/scmi-msg/scmi_pinctrl.c		\
 				plat/rpi/rpi5/bcm2712_pinctrl.c
+
+BL31_SOURCES		+= plat/rpi/rpi5/scmi/scmi_policy.c
 endif
 
 $(eval $(call add_define,RPI3_BL33_IN_AARCH32))
