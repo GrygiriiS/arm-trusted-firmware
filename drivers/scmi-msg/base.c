@@ -36,7 +36,9 @@ static void report_attributes(struct scmi_msg *msg)
 	struct scmi_protocol_attributes_p2a return_values = {
 		.status = SCMI_SUCCESS,
 		/* Null agent count since agent discovery is not supported */
-		.attributes = SCMI_BASE_PROTOCOL_ATTRIBUTES(protocol_count, 0U),
+		.attributes =
+		SCMI_BASE_PROTOCOL_ATTRIBUTES(protocol_count,
+					      plat_scmi_agent_count()),
 	};
 
 	if (msg->in_size != 0U) {
@@ -191,4 +193,16 @@ scmi_msg_handler_t scmi_msg_get_base_handler(struct scmi_msg *msg)
 	}
 
 	return scmi_base_handler_table[message_id];
+}
+
+#pragma weak plat_scmi_agent_count
+uint32_t plat_scmi_agent_count(void)
+{
+	return 1;
+}
+
+#pragma weak plat_scmi_agent_get_name
+const char *plat_scmi_agent_get_name(unsigned int agent_id)
+{
+	return NULL;
 }
