@@ -119,8 +119,10 @@ $(eval $(call add_define,SCMI_SERVER_SUPPORT))
 ifdef SCMI_SERVER_SUPPORT
 RPI_SCMI_SHMEM_BASE := 0x3ff00000
 RPI_SCMI_SHMEM_SIZE := 0x10000
+RPI_SCMI_NUM_AGENTS ?= 8
 $(eval $(call add_define,RPI_SCMI_SHMEM_BASE))
 $(eval $(call add_define,RPI_SCMI_SHMEM_SIZE))
+$(eval $(call add_define_val,SCMI_NUM_AGENTS,${RPI_SCMI_NUM_AGENTS}))
 endif
 
 ifeq (${ARCH},aarch32)
