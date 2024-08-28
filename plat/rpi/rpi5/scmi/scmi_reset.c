@@ -47,6 +47,8 @@ struct scmi_reset rpi5_resets[RPI5_SCMIRST_MAX] = {
 	},
 };
 
+scmi_perm_t rpi_scmi_perm_resets[RPI5_SCMIRST_MAX];
+
 static int brcmstb_reset_assert(unsigned int scmi_id)
 {
 	unsigned int off = SW_INIT_BANK(rpi5_resets[scmi_id].id) * SW_INIT_BANK_SIZE;
@@ -146,4 +148,15 @@ int32_t plat_scmi_rstd_set_state(unsigned int agent_id __unused,
 			 brcmstb_reset_deassert(scmi_id);
 
 	return (rc == 0) ? SCMI_SUCCESS : rc;
+}
+
+bool plat_scmi_rstd_permitted(uint32_t agent_id, uint32_t domain_id)
+{
+	assert(agent_id < plat_scmi_agent_count());
+
+	if (!agent_id)
+		return true;
+
+	return scmi_permission_granted(rpi_scmi_perm_resets[domain_id],
+				       agent_id);
 }
