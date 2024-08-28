@@ -241,4 +241,12 @@ int32_t plat_scmi_rstd_autonomous(unsigned int agent_id, unsigned int scmi_id,
 int32_t plat_scmi_rstd_set_state(unsigned int agent_id, unsigned int scmi_id,
 				 bool assert_not_deassert);
 
+/*
+ * Check reset domain permissions for agent
+ * @agent_id: SCMI agent ID
+ * @domain_id: SCMI reset domain ID
+ * Return a true if allowed
+ */
+bool plat_scmi_rstd_permitted(uint32_t agent_id, uint32_t domain_id);
+
 #endif /* SCMI_MSG_H */
