@@ -19,6 +19,7 @@ static bool message_id_is_supported(unsigned int message_id);
 #pragma weak plat_scmi_rstd_get_name
 #pragma weak plat_scmi_rstd_autonomous
 #pragma weak plat_scmi_rstd_set_state
+#pragma weak plat_scmi_rstd_permitted
 
 size_t plat_scmi_rstd_count(unsigned int agent_id __unused)
 {
@@ -43,6 +44,13 @@ int32_t plat_scmi_rstd_set_state(unsigned int agent_id __unused,
 			       bool assert_not_deassert __unused)
 {
 	return SCMI_NOT_SUPPORTED;
+}
+
+bool plat_scmi_rstd_permitted(uint32_t agent_id, uint32_t domain_id)
+{
+	assert(agent_id < plat_scmi_agent_count());
+
+	return true;
 }
 
 static void report_version(struct scmi_msg *msg)
@@ -148,6 +156,11 @@ static void reset_request(struct scmi_msg *msg)
 
 	if (domain_id >= plat_scmi_rstd_count(msg->agent_id)) {
 		scmi_status_response(msg, SCMI_NOT_FOUND);
+		return;
+	}
+
+	if (!plat_scmi_rstd_permitted(msg->agent_id, domain_id)) {
+		scmi_status_response(msg, SCMI_DENIED);
 		return;
 	}
 
