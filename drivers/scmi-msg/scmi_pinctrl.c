@@ -14,6 +14,19 @@
 
 #include "common.h"
 
+#pragma weak plat_scmi_pinctrl_group_permitted
+#pragma weak plat_scmi_pinctrl_pin_permitted
+
+bool plat_scmi_pinctrl_group_permitted(uint32_t agent_id, uint32_t group_id)
+{
+	return true;
+}
+
+bool plat_scmi_pinctrl_pin_permitted(uint32_t agent_id, uint32_t pin_id)
+{
+	return true;
+}
+
 static bool message_id_is_supported(unsigned int message_id);
 
 static void scmi_pinctrl_report_version(struct scmi_msg *msg)
@@ -584,6 +597,20 @@ static void scmi_pinctrl_config_set(struct scmi_msg *msg)
 		return;
 	}
 
+	if (type == PIN_TYPE &&
+	    !plat_scmi_pinctrl_pin_permitted(msg->agent_id, tx->identifier)) {
+		ERROR("scmi: pinctrl cfg denied pin id %d\n", tx->identifier);
+		scmi_status_response(msg, SCMI_DENIED);
+		return;
+	}
+
+	if (type == GROUP_TYPE &&
+	    !plat_scmi_pinctrl_group_permitted(msg->agent_id, tx->identifier)) {
+		ERROR("scmi: pinctrl cfg denied group id %d\n", tx->identifier);
+		scmi_status_response(msg, SCMI_DENIED);
+		return;
+	}
+
 	ret = scmi_pinctrl_config_mux(tx, type);
 	if (ret) {
 		scmi_status_response(msg, ret);
@@ -603,6 +630,7 @@ static void scmi_pinctrl_request(struct scmi_msg *msg)
 {
 	struct scmi_pinctrl_request_a2p *tx = (void *)msg->in;
 	enum scmi_pinctrl_selector_type type;
+	bool allowed;
 	int ret;
 
 	if (msg->in_size != sizeof(*tx)) {
@@ -616,6 +644,21 @@ static void scmi_pinctrl_request(struct scmi_msg *msg)
 	if (type > GROUP_TYPE) {
 		ERROR("scmi: pinctrl req wrong sel_type %d\n", type);
 		scmi_status_response(msg, SCMI_INVALID_PARAMETERS);
+		return;
+	}
+
+	if (type == GROUP_TYPE) {
+		allowed = plat_scmi_pinctrl_group_permitted(msg->agent_id,
+							    tx->identifier);
+	} else {
+		allowed = plat_scmi_pinctrl_pin_permitted(msg->agent_id,
+							  tx->identifier);
+	}
+
+	if (!allowed) {
+		ERROR("scmi: pinctrl request denied type=%d selector id %d\n",
+		      type, tx->identifier);
+		scmi_status_response(msg, SCMI_DENIED);
 		return;
 	}
 
@@ -638,6 +681,7 @@ static void scmi_pinctrl_release(struct scmi_msg *msg)
 {
 	struct scmi_pinctrl_release_a2p *tx = (void *)msg->in;
 	enum scmi_pinctrl_selector_type type;
+	bool allowed;
 	int ret;
 
 	if (msg->in_size != sizeof(*tx)) {
@@ -651,6 +695,21 @@ static void scmi_pinctrl_release(struct scmi_msg *msg)
 	if (type > GROUP_TYPE) {
 		ERROR("scmi: pinctrl free wrong sel_type %d\n", type);
 		scmi_status_response(msg, SCMI_INVALID_PARAMETERS);
+		return;
+	}
+
+	if (type == GROUP_TYPE) {
+		allowed = plat_scmi_pinctrl_group_permitted(msg->agent_id,
+							    tx->identifier);
+	} else {
+		allowed = plat_scmi_pinctrl_pin_permitted(msg->agent_id,
+							  tx->identifier);
+	}
+
+	if (!allowed) {
+		ERROR("scmi: pinctrl request denied type=%d selector id %d\n",
+		      type, tx->identifier);
+		scmi_status_response(msg, SCMI_DENIED);
 		return;
 	}
 
