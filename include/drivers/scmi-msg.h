@@ -249,4 +249,20 @@ int32_t plat_scmi_rstd_set_state(unsigned int agent_id, unsigned int scmi_id,
  */
 bool plat_scmi_rstd_permitted(uint32_t agent_id, uint32_t domain_id);
 
+/*
+ * Check reset domain permissions for agent
+ * @agent_id: SCMI agent ID
+ * @group_id: pinctrl group ID
+ * Return a true if allowed
+ */
+bool plat_scmi_pinctrl_group_permitted(uint32_t agent_id, uint32_t group_id);
+
+/*
+ * Check reset domain permissions for agent
+ * @agent_id: SCMI agent ID
+ * @pin_id: pinctrl pin ID
+ * Return a true if allowed
+ */
+bool plat_scmi_pinctrl_pin_permitted(uint32_t agent_id, uint32_t pin_id);
+
 #endif /* SCMI_MSG_H */
