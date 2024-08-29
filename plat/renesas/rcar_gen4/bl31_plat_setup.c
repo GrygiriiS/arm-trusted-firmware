@@ -78,6 +78,23 @@ void bl31_plat_arch_setup(void)
 	rcar_pwrc_code_copy_to_system_ram();
 }
 
+static void rcar_ipmmu_setup(void)
+{
+	mmio_write_32(0xeefc0000 + 0x1504, 0x01000000);
+	mmio_write_32(0xeefc0000 + 0x1500, 0xC0000000);
+
+	// TODO: Deal with IPMMU-IR
+	mmio_write_32(0xeee00000 + 0x1500, 0xC0000000);
+	mmio_write_32(0xeef40000 + 0x1500, 0xC0000000);
+	mmio_write_32(0xeef00000 + 0x1500, 0xC0000000);
+	mmio_write_32(0xeed00000 + 0x1500, 0xC0000000);
+	mmio_write_32(0xee4c0000 + 0x1500, 0xC0000000);
+	mmio_write_32(0xee480000 + 0x1500, 0xC0000000);
+	mmio_write_32(0xeed40000 + 0x1500, 0xC0000000);
+	mmio_write_32(0xeedc0000 + 0x1500, 0xC0000000);
+	mmio_write_32(0xeeec0000 + 0x1500, 0xC0000000);
+	mmio_write_32(0xeee80000 + 0x1500, 0xC0000000);
+}
 void bl31_platform_setup(void)
 {
 	rcar_mssr_setup();
@@ -97,6 +114,7 @@ void bl31_platform_setup(void)
 
 	plat_rcar_scmi_setup();
 	rcar_pwrc_setup();
+	rcar_ipmmu_setup();
 	rcar_ptp_setup();
 
 	/* Enable arch timer */
