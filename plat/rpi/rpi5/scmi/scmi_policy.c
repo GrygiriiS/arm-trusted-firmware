@@ -21,21 +21,37 @@ static const struct scmi_device default_dev = {
 
 static const struct scmi_device rpi_scmi_devices[RPI5_SCMI_DEV_COUNT] = {
 	[RPI5_SCMI_DEV_PCIE0] = default_dev,
-	[RPI5_SCMI_DEV_PCIE1] = {
-		.rsts = (int[]){RPI5_SCMIRST_PCIE1_1, RPI5_SCMIRST_PCIE1_2, -1},
-		.pins = (int[]){-1},
-	},
-	[RPI5_SCMI_DEV_PCIE2] = {
-		.rsts = (int[]){RPI5_SCMIRST_PCIE2_1, RPI5_SCMIRST_PCIE2_2, -1},
-		.pins = (int[]){-1},
-	},
+	[RPI5_SCMI_DEV_PCIE1] =
+		{
+			.rsts = (int[]){RPI5_SCMIRST_PCIE1_1,
+					RPI5_SCMIRST_PCIE1_2, -1},
+			.pins = (int[]){-1},
+		},
+	[RPI5_SCMI_DEV_PCIE2] =
+		{
+			.rsts = (int[]){RPI5_SCMIRST_PCIE2_1,
+					RPI5_SCMIRST_PCIE2_2, -1},
+			.pins = (int[]){-1},
+		},
 	[RPI5_SCMI_DEV_SDHCI0] = default_dev,
-	[RPI5_SCMI_DEV_SDHCI1] = default_dev,
+	[RPI5_SCMI_DEV_SDHCI1] =
+		{
+			.rsts = (int[]){-1},
+			.pins = (int[]){RPI5_SCMI_PIN_GPIO_30,
+					RPI5_SCMI_PIN_GPIO_31,
+					RPI5_SCMI_PIN_GPIO_32,
+					RPI5_SCMI_PIN_GPIO_33,
+					RPI5_SCMI_PIN_GPIO_34,
+					RPI5_SCMI_PIN_GPIO_35, -1},
+		},
 };
 
 static spinlock_t scmi_lock;
 
 static uint32_t rpi_scmi_device_owner[RPI5_SCMI_DEV_COUNT];
+
+static scmi_perm_t rpi_scmi_perm_pinctrl[RPI5_SCMI_PIN_MAX];
+
 
 static void __scmi_permit(scmi_perm_t *perm, uint32_t agent_id)
 {
@@ -62,6 +78,7 @@ static void __mangle_dev_perm(uint32_t agent_id, uint32_t dev_id,
 		}                                                              \
 	}
 	MANGLE(rsts, rpi_scmi_perm_resets);
+	MANGLE(pins, rpi_scmi_perm_pinctrl);
 #undef MANGLE
 }
 
@@ -139,4 +156,28 @@ int32_t plat_scmi_reset_agent_cfg(uint32_t agent_id, bool reset_perm)
 	spin_unlock(&scmi_lock);
 
 	return SCMI_SUCCESS;
+}
+
+bool plat_scmi_pinctrl_group_permitted(uint32_t agent_id, uint32_t group_id)
+{
+	assert(agent_id < plat_scmi_agent_count());
+
+	if (!agent_id)
+		return true;
+
+	/* RPI5 have 1:1 pin to group mapping */
+	return scmi_permission_granted(rpi_scmi_perm_pinctrl[group_id],
+				       agent_id);
+}
+
+bool plat_scmi_pinctrl_pin_permitted(uint32_t agent_id, uint32_t pin_id)
+{
+	assert(agent_id < plat_scmi_agent_count());
+
+	if (!agent_id)
+		return true;
+
+	/* RPI5 have 1:1 pin to group mapping */
+	return scmi_permission_granted(rpi_scmi_perm_pinctrl[pin_id],
+				       agent_id);
 }
