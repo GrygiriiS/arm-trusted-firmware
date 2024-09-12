@@ -94,6 +94,8 @@ SCMI_SERVER_SUPPORT		?= 1
 # ----------------------
 
 ifeq ($(SCMI_SERVER_SUPPORT), 1)
+$(eval $(call add_define,SCMI_SERVER_SUPPORT))
+
 #SCMI Server sources
 BL31_SOURCES		+= drivers/scmi-msg/base.c			\
 				drivers/scmi-msg/entry.c		\
@@ -107,6 +109,13 @@ BL31_SOURCES		+= drivers/scmi-msg/scmi_pinctrl.c		\
 				plat/rpi/rpi5/bcm2712_pinctrl.c
 
 BL31_SOURCES		+= plat/rpi/rpi5/scmi/scmi_policy.c
+
+RPI_SCMI_SHMEM_BASE := 0x3ff00000
+RPI_SCMI_SHMEM_SIZE := 0x10000
+RPI_SCMI_NUM_AGENTS ?= 8
+$(eval $(call add_define,RPI_SCMI_SHMEM_BASE))
+$(eval $(call add_define,RPI_SCMI_SHMEM_SIZE))
+$(eval $(call add_define_val,SCMI_NUM_AGENTS,${RPI_SCMI_NUM_AGENTS}))
 endif
 
 $(eval $(call add_define,RPI3_BL33_IN_AARCH32))
@@ -116,16 +125,6 @@ $(eval $(call add_define,RPI3_PRELOADED_DTB_BASE))
 endif
 $(eval $(call add_define,RPI3_RUNTIME_UART))
 $(eval $(call add_define,RPI3_USE_UEFI_MAP))
-$(eval $(call add_define,SCMI_SERVER_SUPPORT))
-
-ifdef SCMI_SERVER_SUPPORT
-RPI_SCMI_SHMEM_BASE := 0x3ff00000
-RPI_SCMI_SHMEM_SIZE := 0x10000
-RPI_SCMI_NUM_AGENTS ?= 8
-$(eval $(call add_define,RPI_SCMI_SHMEM_BASE))
-$(eval $(call add_define,RPI_SCMI_SHMEM_SIZE))
-$(eval $(call add_define_val,SCMI_NUM_AGENTS,${RPI_SCMI_NUM_AGENTS}))
-endif
 
 ifeq (${ARCH},aarch32)
   $(error Error: AArch32 not supported on rpi5)
