@@ -86,6 +86,7 @@ const char *plat_scmi_sub_vendor_name(void)
 }
 
 static const uint8_t plat_protocol_list[] = {
+	SCMI_PROTOCOL_ID_POWER_DOMAIN,
 	0U /* Null termination */
 };
 
