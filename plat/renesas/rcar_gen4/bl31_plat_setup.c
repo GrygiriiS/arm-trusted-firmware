@@ -97,6 +97,7 @@ void bl31_platform_setup(void)
 	/* Enable arch timer */
 	generic_delay_timer_init();
 
+	rcar_init_scmi_power_domains();
 	rcar_init_scmi_server();
 }
 

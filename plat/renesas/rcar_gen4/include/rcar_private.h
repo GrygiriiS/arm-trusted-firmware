@@ -121,8 +121,10 @@ int32_t rcar_cluster_pos_by_mpidr(u_register_t mpidr);
 
 #ifdef SCMI_SERVER_SUPPORT
 void rcar_init_scmi_server(void);
+void rcar_init_scmi_power_domains(void);
 #else
 static inline void rcar_init_scmi_server(void) { }
+static inline void rcar_init_scmi_power_domains(void) { }
 #endif /* SCMI_SERVER_SUPPORT */
 
 #endif /* RCAR_PRIVATE_H */
