@@ -73,6 +73,9 @@ void bl31_plat_arch_setup(void)
 	rcar_pwrc_code_copy_to_system_ram();
 }
 
+/* TODO: dbg, remove */
+#include <drivers/delay_timer.h>
+
 void bl31_platform_setup(void)
 {
 	rcar_mssr_setup();
@@ -97,6 +100,10 @@ void bl31_platform_setup(void)
 	/* Enable arch timer */
 	generic_delay_timer_init();
 
+	/* TODO: dbg, remove */
+	udelay(1000);
+
+	rcar_init_scmi_power_domains();
 	rcar_init_scmi_server();
 }
 
