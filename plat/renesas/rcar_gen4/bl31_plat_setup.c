@@ -14,6 +14,7 @@
 #include <common/debug.h>
 #include <drivers/arm/cci.h>
 #include <drivers/console.h>
+#include <drivers/generic_delay_timer.h>
 #include <lib/mmio.h>
 #include <plat/common/platform.h>
 
@@ -92,6 +93,11 @@ void bl31_platform_setup(void)
 	plat_rcar_scmi_setup();
 	rcar_pwrc_setup();
 	rcar_ptp_setup();
+
+	/* Enable arch timer */
+	generic_delay_timer_init();
+
+	rcar_init_scmi_server();
 }
 
 const spd_pm_ops_t rcar_pm = {
