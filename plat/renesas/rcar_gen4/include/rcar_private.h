@@ -119,4 +119,10 @@ static inline const plat_psci_ops_t *plat_rcar_psci_override_pm_ops(plat_psci_op
 
 int32_t rcar_cluster_pos_by_mpidr(u_register_t mpidr);
 
+#ifdef SCMI_SERVER_SUPPORT
+void rcar_init_scmi_server(void);
+#else
+static inline void rcar_init_scmi_server(void) { }
+#endif /* SCMI_SERVER_SUPPORT */
+
 #endif /* RCAR_PRIVATE_H */

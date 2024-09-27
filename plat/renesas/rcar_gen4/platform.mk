@@ -17,6 +17,9 @@ CRASH_REPORTING			:= 1
 HANDLE_EA_EL3_FIRST		:= 1
 ENABLE_STACK_PROTECTOR	:= strong
 
+# Enable SCMI server support
+SCMI_SERVER_SUPPORT		?= 1
+
 # Process SET_SCMI_PARAM flag
 # 0:Disable(default), 1:Enable
 ifndef SET_SCMI_PARAM
@@ -30,6 +33,24 @@ else
     else
         $(error "Error:SET_SCMI_PARAM=${SET_SCMI_PARAM} is not supported.")
     endif
+endif
+
+ifeq ($(SCMI_SERVER_SUPPORT), 1)
+$(eval $(call add_define,SCMI_SERVER_SUPPORT))
+
+#SCMI Server sources
+BL31_SOURCES		+= drivers/scmi-msg/base.c			\
+				drivers/scmi-msg/entry.c		\
+				drivers/scmi-msg/smt.c			\
+				plat/renesas/rcar_gen4/scmi/scmi.c		\
+				plat/renesas/rcar_gen4/rcar_svc_setup.c
+
+RCAR_SCMI_SHMEM_BASE := 0x47ff0000
+RCAR_SCMI_SHMEM_SIZE := 0x10000
+RCAR_SCMI_NUM_AGENTS ?= 8
+$(eval $(call add_define,RCAR_SCMI_SHMEM_BASE))
+$(eval $(call add_define,RCAR_SCMI_SHMEM_SIZE))
+$(eval $(call add_define_val,SCMI_NUM_AGENTS,${RCAR_SCMI_NUM_AGENTS}))
 endif
 
 ifndef PTP_NONSECURE_ACCESS
@@ -141,7 +162,9 @@ BL31_SOURCES	+=	${RCAR_GIC_SOURCES}				\
 			drivers/renesas/rcar_gen4/scif/scif.c		\
 			drivers/renesas/rcar_gen4/scif/scif_helpers.S	\
 			drivers/renesas/rcar_gen4/mssr/mssr.c		\
-			drivers/arm/cci/cci.c
+			drivers/arm/cci/cci.c \
+			drivers/delay_timer/delay_timer.c		\
+			drivers/delay_timer/generic_delay_timer.c
 
 ifeq (${SET_SCMI_PARAM},1)
 BL31_SOURCES	+=	${SCMI_DRIVER_SOURES}				\
