@@ -8,16 +8,9 @@
 #include <lib/mmio.h>
 #include <lib/utils_def.h>
 
-#define CPG_BASE	0xE6150000U
-#define CPG_CPGWPR	(CPG_BASE + 0x000U)
+#include <cpg_registers.h>
 
-#define MSSR_BASE	CPG_BASE
-#define MSSR_SRCR(n)	(MSSR_BASE + 0x2C00U + (n) * 4)
-#define MSSR_SRSTCLR(n)	(MSSR_BASE + 0x2C80U + (n) * 4)
-#define MSSR_MSTPCR(n)	(MSSR_BASE + 0x2D00U + (n) * 4)
-#define MSSR_MSTPSR(n)	(MSSR_BASE + 0x2E00U + (n) * 4)
-
-static void cpg_write_32(uint32_t addr, uint32_t val)
+void cpg_write_32(uint32_t addr, uint32_t val)
 {
 	mmio_write_32(CPG_CPGWPR, ~val);
 	mmio_write_32(addr, val);
@@ -43,6 +36,15 @@ void rcar_mssr_clock(int n, uint32_t data, bool on, bool force)
 		while (data & mmio_read_32(MSSR_MSTPSR(n)));
 	else
 		while (!(data & mmio_read_32(MSSR_MSTPSR(n))));
+}
+
+bool rcar_mssr_clock_state(uint32_t reg, uint32_t bit)
+{
+	uint32_t status;
+
+	status = mmio_read_32(MSSR_MSTPSR(reg));
+
+	return !(status & BIT(bit));
 }
 
 void rcar_mssr_soft_reset(int n, uint32_t data, bool assert, bool force)
