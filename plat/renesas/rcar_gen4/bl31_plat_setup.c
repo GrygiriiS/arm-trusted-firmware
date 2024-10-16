@@ -98,6 +98,7 @@ void bl31_platform_setup(void)
 	generic_delay_timer_init();
 
 	rcar_init_scmi_power_domains();
+	rcar_init_scmi_clocks();
 	rcar_init_scmi_server();
 }
 
