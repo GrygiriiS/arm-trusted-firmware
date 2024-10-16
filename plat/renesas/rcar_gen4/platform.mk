@@ -44,9 +44,11 @@ BL31_SOURCES		+= drivers/scmi-msg/base.c			\
 				drivers/scmi-msg/smt.c			\
 				drivers/scmi-msg/power_domain.c \
 				drivers/scmi-msg/reset_domain.c \
+				drivers/scmi-msg/clock.c \
 				plat/renesas/rcar_gen4/scmi/scmi.c		\
 				plat/renesas/rcar_gen4/scmi/scmi_power_domain.c		\
 				plat/renesas/rcar_gen4/scmi/scmi_reset.c		\
+				plat/renesas/rcar_gen4/scmi/scmi_clocks.c		\
 				plat/renesas/rcar_gen4/rcar_svc_setup.c
 
 RCAR_SCMI_SHMEM_BASE := 0x47ff0000
@@ -124,6 +126,7 @@ HW_ASSISTED_COHERENCY := 1
 
 
 PLAT_INCLUDES	:=	-Iplat/renesas/rcar_gen4/include		\
+			-Iplat/renesas/rcar_gen4/include/registers \
 			-Iplat/renesas/rcar_gen4			\
 			-Idrivers/renesas/rcar_gen4/pwrc		\
 			-Idrivers/renesas/rcar_gen4/scif		\
