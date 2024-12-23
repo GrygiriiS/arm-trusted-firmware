@@ -6,6 +6,7 @@
 
 #include <assert.h>
 #include <drivers/console.h>
+#include <plat/common/platform.h>
 #include "rcar_private.h"
 #include "scif.h"
 
@@ -13,7 +14,7 @@
 void plat_ea_handler(unsigned int ea_reason, uint64_t syndrome, void *cookie,
 		void *handle, uint64_t flags)
 {
-	return;
+	plat_default_ea_handler(ea_reason, syndrome, cookie, handle, flags);
 }
 
 
