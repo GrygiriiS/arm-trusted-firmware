@@ -114,4 +114,6 @@ void rcar_init_scmi_server(void)
 	for (i = 0U; i < ARRAY_SIZE(scmi_channel); i++) {
 		scmi_smt_init_agent_channel(&scmi_channel[i]);
 	}
+
+	NOTICE("SCMI enabled\n");
 }
