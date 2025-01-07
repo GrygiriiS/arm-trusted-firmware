@@ -249,4 +249,22 @@ int32_t plat_scmi_rstd_set_state(unsigned int agent_id, unsigned int scmi_id,
  */
 bool plat_scmi_rstd_permitted(uint32_t agent_id, uint32_t domain_id);
 
+size_t plat_scmi_pd_count(unsigned int agent_id);
+
+const char *plat_scmi_pd_get_name(unsigned int agent_id,
+				  unsigned int pd_id);
+
+unsigned int plat_scmi_pd_statistics(unsigned int agent_id,
+				     unsigned long *pd_id);
+
+unsigned int plat_scmi_pd_get_attributes(unsigned int agent_id,
+					 unsigned int pd_id);
+
+unsigned int plat_scmi_pd_get_state(unsigned int agent_id,
+				    unsigned int pd_id);
+
+int32_t plat_scmi_pd_set_state(unsigned int agent_id,
+			       unsigned int flags,
+			       unsigned int pd_id,
+			       unsigned int state);
 #endif /* SCMI_MSG_H */

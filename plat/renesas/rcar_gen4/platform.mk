@@ -49,6 +49,7 @@ BL31_SOURCES		+= drivers/scmi-msg/base.c			\
 				plat/renesas/rcar_gen4/scmi/scmi_power_domain.c		\
 				plat/renesas/rcar_gen4/scmi/scmi_reset.c		\
 				plat/renesas/rcar_gen4/scmi/scmi_clocks.c		\
+				plat/renesas/rcar_gen4/scmi/scmi_policy.c		\
 				plat/renesas/rcar_gen4/rcar_svc_setup.c
 
 RCAR_SCMI_SHMEM_BASE := 0x47ff0000
