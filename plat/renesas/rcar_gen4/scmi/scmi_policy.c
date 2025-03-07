@@ -285,3 +285,16 @@ int32_t plat_scmi_reset_agent_cfg(uint32_t agent_id, bool reset_perm)
 
 	return SCMI_SUCCESS;
 }
+
+uint32_t plat_scmi_device_count(void)
+{
+	return GEN4_SCMI_DEV_LAST;
+}
+
+int32_t plat_scmi_device_permission(uint32_t agent_id, uint32_t device_id,
+				    bool allow)
+{
+	INFO("scmi: device_permission agent:%u device:%d allow:%d\n", agent_id,
+	     device_id, allow);
+	return SCMI_SUCCESS;
+}
